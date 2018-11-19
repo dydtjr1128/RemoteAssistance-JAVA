@@ -8,19 +8,13 @@ import java.awt.image.DirectColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 
-import com.sun.jna.Library;
 import com.sun.jna.Native;
-import com.sun.jna.platform.KeyboardUtils;
 import com.sun.jna.platform.win32.WinDef.HBITMAP;
 import com.sun.jna.platform.win32.WinDef.HDC;
 import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinDef.LRESULT;
-import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinGDI.BITMAPINFO;
 import com.sun.jna.platform.win32.WinGDI.BITMAPINFOHEADER;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
-import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
-import com.sun.jna.platform.win32.WinUser.LowLevelKeyboardProc;
 import com.sun.jna.win32.W32APIOptions;
 
 public class JNAScreenShot {

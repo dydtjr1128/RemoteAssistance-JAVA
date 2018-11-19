@@ -10,15 +10,12 @@ import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.awt.image.Raster;
-import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Vector;
 
-import javax.sound.midi.Synthesizer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,26 +38,20 @@ import com.sun.jna.platform.win32.WinUser.LowLevelKeyboardProc;
 import com.sun.jna.platform.win32.WinUser.MSG;
 
 class ScreenPanel extends JPanel implements Runnable {
-	private Socket socket;
-	private Socket cursorSocket;
-	private Socket keyboardSocket;
+	private static final long serialVersionUID = 1L;
+
 	private BufferedImage screenImage;
-	private JFrame frame;
 	private JLabel FPSlabel;
 	private int FPScount = 0;
 	private BufferedImage image;
 	private DataOutputStream mouseOutputStream;
 	private DataOutputStream keyboardOutputStream;
 	private DataInputStream dataInputStream;
-	private ObjectInputStream objectInputStream;
-	private BufferedWriter bufferedWriter;
 	private int image_Width = 1280;
 	private int image_Height = 720;
 	private byte imageByte2[] = new byte[6220800];
 	private int mouseX = 0, mouseY = 0;
-	private int mouseClickCount = 0;
 	private int mouseButton = 0;
-	private int mousePosition = 0; // 1 == move 2 == click
 	private int screen_Width = 1920;
 	private int screen_Height = 1080;
 	private Boolean isCompress = true;
@@ -71,8 +62,6 @@ class ScreenPanel extends JPanel implements Runnable {
 	private final int MOUSE_UP_WHEEL = 5;
 	private final int KEY_PRESSED = 6;
 	private final int KEY_RELEASED = 7;
-	private final int KEY_CHANGE_LANGUAGE = 8;
-	private int count = 0;
 	private Vector<byte[]> imgVec = new Vector<>();
 	ScreenPanel ppp = this;
 	User32 lib = User32.INSTANCE;
@@ -91,10 +80,6 @@ class ScreenPanel extends JPanel implements Runnable {
 
 	public ScreenPanel(JFrame frame, Socket socket, Socket cursorSocket, Socket keyboardSocket) {
 		setLayout(null);
-		this.socket = socket;
-		this.cursorSocket = cursorSocket;
-		this.keyboardSocket = keyboardSocket;
-		this.frame = frame;
 		FPSlabel = new JLabel("FPS : " + Integer.toString(FPScount));
 		FPSlabel.setFont(new Font("¸¼Àº°íµñ", Font.BOLD, 20));
 		FPSlabel.setBounds(10, 10, 100, 50);
@@ -110,7 +95,6 @@ class ScreenPanel extends JPanel implements Runnable {
 			mouseOutputStream = new DataOutputStream(cursorSocket.getOutputStream());
 			keyboardOutputStream = new DataOutputStream(keyboardSocket.getOutputStream());
 			dataInputStream = new DataInputStream(socket.getInputStream());
-			objectInputStream = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			DebugMessage.printDebugMessage(e);
 		}

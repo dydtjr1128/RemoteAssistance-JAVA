@@ -1,22 +1,14 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
@@ -30,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class NetworkScreenClient extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private ControlPanel controlPanel = new ControlPanel();
 	private String myFont = "¸¼Àº°íµñ";
 	private URL exitURL = getClass().getClassLoader().getResource("exit.png");	
@@ -99,9 +92,11 @@ public class NetworkScreenClient extends JFrame {
 		setJMenuBar(jbar);
 	}
 	class ControlPanel extends JPanel{
-		JTextField addressField = new JTextField(10);
-		JButton connectBtn = new JButton("Connect");
-		JButton exitBtn = new JButton("Exit");
+
+		private static final long serialVersionUID = 1L;
+		private JTextField addressField = new JTextField(10);
+		private JButton connectBtn = new JButton("Connect");
+		private JButton exitBtn = new JButton("Exit");
 		public ControlPanel() {
 			setLayout(null);
 			

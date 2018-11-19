@@ -2,25 +2,17 @@ import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
-import java.awt.Transparency;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -28,11 +20,8 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Random;
 import java.util.Vector;
-import java.util.zip.Deflater;
+
 import javax.imageio.ImageIO;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -43,9 +32,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.xerial.snappy.Snappy;
-import org.xerial.snappy.SnappyFramedOutputStream;
-import org.xerial.snappy.SnappyNative;
-import org.xerial.snappy.SnappyOutputStream;
 
 import com.sun.jna.Library;
 import com.sun.jna.Native;
@@ -53,14 +39,13 @@ import com.sun.jna.Native;
 
 
 public class NetworkScreenServer extends JFrame {
+	private static final long serialVersionUID = 1L;
 	private final static int SERVER_PORT = 9999;
 	private final static int SERVER_CURSOR_PORT = SERVER_PORT - 1;
 	private final static int SERVER_KEBOARD_PORT = SERVER_PORT - 2;
 	private DataOutputStream dataOutputStream;
-	private ObjectOutputStream objectOutputStream;
 	private Image cursor;
 	private String myFont = "¸¼Àº°íµñ";
-	private BufferedImage screenImage;
 	private Rectangle rect;
 	private MainPanel mainPanel = new MainPanel();
 	private ServerSocket imageSeverSocket = null;
@@ -86,7 +71,6 @@ public class NetworkScreenServer extends JFrame {
 	private JLabel compressLabel;
 	private URL cursorURL = getClass().getClassLoader().getResource("cursor.gif");
 	private Boolean isCompress = true;
-	private JFrame fff = this;
 	private final int MOUSE_MOVE = 1;
 	private final int MOUSE_PRESSD = 2;
 	private final int MOUSE_RELEASED = 3;
@@ -94,11 +78,8 @@ public class NetworkScreenServer extends JFrame {
 	private final int MOUSE_UP_WHEEL = 5;
 	private final int KEY_PRESSED = 6;
 	private final int KEY_RELEASED = 7;
-	private final int KEY_CHANGE_LANGUAGE = 8;
 	int count = 0, count2 = 0;
 	private User32jna u32 = User32jna.INSTANCE;
-	private int buffersize = 1;
-	private BufferedImage[] img = new BufferedImage[buffersize];
 	private Vector<byte[]> imgvec = new Vector<>();
 
 	public NetworkScreenServer() {
@@ -160,6 +141,8 @@ public class NetworkScreenServer extends JFrame {
 	 */
 
 	class MainPanel extends JPanel implements Runnable {
+
+		private static final long serialVersionUID = 1L;
 
 		public MainPanel() {
 			setLayout(null);
@@ -278,7 +261,6 @@ public class NetworkScreenServer extends JFrame {
 				imageSocket = imageSeverSocket.accept();
 				imageSocket.setTcpNoDelay(true);
 				dataOutputStream = new DataOutputStream(imageSocket.getOutputStream());
-				objectOutputStream = new ObjectOutputStream(imageSocket.getOutputStream());
 				dataOutputStream.writeInt(screenWidth);
 				dataOutputStream.writeInt(screenHeight);
 				dataOutputStream.writeInt(new_Width);
