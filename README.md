@@ -10,20 +10,20 @@
 </p>
 
 
-## Todo
+## ToDo
 
 <p>
   <ul>
-    <li>Reduce network traffic</li>
-    <li>Improve image compress speed(ex. double buffering..,grid image)</li>
-    <li>Encryption data</li>    
-    <li>Compare using SIMD</li>
-    <li>Communication with central server</li>
-    <li>GUI</li>
-    <li>File manager</li>
-    <li>Install</li>
-    <li>Service registration(Windows)</li>
-    <li>Support Linux</li>
+    <li>- [ ] Reduce network traffic</li>
+    <li>- [ ] Improve image compress speed(ex. double buffering..,grid image)</li>
+    <li>- [ ] Encryption data</li>    
+    <li>- [ ] Compare using SIMD</li>
+    <li>- [ ] Communication with central server</li>
+    <li>- [ ] GUI</li>
+    <li>- [ ] File manager</li>
+    <li>- [ ] Install</li>
+    <li>- [ ] Service registration(Windows)</li>
+    <li>- [ ] Support Linux</li>
     
   </ul>
 </p>
