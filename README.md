@@ -15,13 +15,16 @@
 <p>
   <ul>
     <li>- [ ] Reduce network traffic</li>
-    <li>- [ ] Improve image compress speed(ex. double buffering..,grid image)</li>
+    <li>- [ ] Improve image compress speed(ex. double buffering, grid image)</li>
     <li>- [ ] Encryption data</li>    
     <li>- [ ] Compare using SIMD</li>
     <li>- [ ] Communication with central server</li>
     <li>- [ ] GUI</li>
+    <li>- [ ] Send System sound</li>
+    <li>- [ ] Multi user session</li>
+    <li>- [ ] Chatting & Voice chat</li>    
     <li>- [ ] File manager</li>
-    <li>- [ ] Install</li>
+    <li>- [ ] Install program</li>
     <li>- [ ] Service registration(Windows)</li>
     <li>- [ ] Support Linux</li>
     
