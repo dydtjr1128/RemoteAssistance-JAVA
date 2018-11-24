@@ -27,7 +27,11 @@
     <li>- [ ] Install program</li>
     <li>- [ ] Service registration(Windows)</li>
     <li>- [ ] Support Linux</li>
-    <li>- [ ] Plan a connection flow</li>
+    <li>- [ ] Plan a connection flow
+      <ul>
+        <li>client - broker - host</li>
+      </ul>
+    </li>
     
   </ul>
 </p>
