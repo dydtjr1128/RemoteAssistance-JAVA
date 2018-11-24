@@ -27,6 +27,7 @@
     <li>- [ ] Install program</li>
     <li>- [ ] Service registration(Windows)</li>
     <li>- [ ] Support Linux</li>
+    <li>- [ ] Plan a connection flow</li>
     
   </ul>
 </p>
