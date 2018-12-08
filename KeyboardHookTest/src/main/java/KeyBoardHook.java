@@ -11,12 +11,16 @@ import com.sun.jna.platform.win32.WinUser.KBDLLHOOKSTRUCT;
 import com.sun.jna.platform.win32.WinUser.LowLevelKeyboardProc;
 import com.sun.jna.platform.win32.WinUser.MSG;
 
+import java.util.HashMap;
+
 public class KeyBoardHook {	
 	static HHOOK hhk = null;
 	public static void main(String[] args) {		
 		HMODULE hMod = Kernel32.INSTANCE.GetModuleHandle(null);
 		User32 lib = User32.INSTANCE;
 		int result = 0;
+		//HashMap<Character,Integer> codeMap = new HashMap<>();
+
 		LowLevelKeyboardProc rr = new LowLevelKeyboardProc() {			
 			@Override
 			public LRESULT callback(int nCode, WPARAM wParam, KBDLLHOOKSTRUCT info) {

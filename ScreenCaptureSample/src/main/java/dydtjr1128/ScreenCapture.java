@@ -4,6 +4,7 @@ import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
@@ -21,39 +23,90 @@ import java.util.concurrent.SynchronousQueue;
 
 public class ScreenCapture extends JFrame {
     private double FPScount = 0;
-    private int screenWidth, screenHeight;
-    int buffersize = 1;
-    byte imgbyte[][] = new byte[buffersize][];
-    BufferedImage prevImg;
-    BufferedImage img;
-    SynchronousQueue<byte[]> imageBlockingQueue2 = new SynchronousQueue<>();
-    BlockingQueue<byte[]> imageBlockingQueue = new ArrayBlockingQueue<>(3);
+    private double FPS = 0;
+    private String FPSLabel = "FPS : 0";
+    private ByteBuffer img;
+    private static BufferedImage image;
+    private SynchronousQueue<ByteBuffer> imageBlockingQueue2 = new SynchronousQueue<>();
+    private BlockingQueue<byte[]> imageBlockingQueue = new ArrayBlockingQueue<>(3);
+    private StringBuilder builder = new StringBuilder();
+    private final Font myFont = new Font("한컴 윤고딕 250", Font.BOLD, 15);
+    ScreenPanel sp;
 
-    public ScreenCapture() {
+    public ScreenCapture() throws AWTException {
+
         setTitle("screen");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setDefaultLookAndFeelDecorated(true);
         setLayout(null);
         //this.setAlwaysOnTop(true);
-        ScreenPanel sp = new ScreenPanel();
+        sp = new ScreenPanel();
         setContentPane(sp);
         setSize(800, 800);
         setVisible(true);
 
-        Thread th = new Thread(sp);
-        th.setPriority(Thread.MAX_PRIORITY);
-        th.start();
+        for (int i = 0; i < 1; i++) {
+            ImageCaptureThread th = new ImageCaptureThread();
+            //th.setPriority(Thread.MAX_PRIORITY);
+            th.start();
+        }
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                FPS = FPScount;
+                FPSLabel = builder.append("FPS : ").append(String.format("%.2f", FPS)).toString();
+                builder.setLength(0);
+                FPScount = 0;
+
+                /*long total = Runtime.getRuntime().totalMemory();
+                long free = Runtime.getRuntime().freeMemory();
+                int n = 1024 * 1024;
+                System.out.println("Used Mem : " + (total - free) / n + "MB");
+                System.out.println("Free Mem : " + (free) / n + "MB");
+                System.out.println("Total Mem : " + (total) / n + "MB");
+                System.out.println("Max Mem : " + (Runtime.getRuntime().maxMemory()) / n + "MB");
+                System.out.println("===========================");*/
+            }
+        });
+        timer.start();
+
     }
 
-    class ScreenPanel extends JPanel implements Runnable {
-        BufferedImage image;
-        int screenWidth, screenHeight;
-        Robot robot = null;
+    class ImageCaptureThread extends Thread {
+        private final Rectangle rect;
+        private final Robot robot = new Robot();
+        private final ByteBuffer buffer = ByteBuffer.allocateDirect(1024 * 1024 * 1);//쓰레드마다 1MB
+
+        public ImageCaptureThread() throws AWTException {
+            rect = new Rectangle(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width,
+                    Toolkit.getDefaultToolkit().getScreenSize().height);
+        }
+
+        public void run() {
+            while (true) {
+                try {
+                    BufferedImage ii = robot.createScreenCapture(rect);
+                    buffer.put(toByteArray(ii));
+                    imageBlockingQueue2.put(buffer);
+                    sp.repaint();
+                    ii = null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    class ScreenPanel extends JPanel {
+        private int screenWidth, screenHeight;
+        private Robot robot = null;
+        private int panelWidth;
+        private int height;
 
         public ScreenPanel() {
             screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
             screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-            addMouseListener(new MouseListener() {
+            /*addMouseListener(new MouseListener() {
                 public void mouseClicked(MouseEvent e) {
                     if (e.getClickCount() == 1 && e.getButton() == e.BUTTON3) {
                         //System.out.println("4444");
@@ -85,7 +138,7 @@ public class ScreenCapture extends JFrame {
                 public void mouseExited(MouseEvent e) {
 
                 }
-            });
+            });*/
             try {
                 robot = new Robot();
             } catch (AWTException e) {
@@ -93,76 +146,57 @@ public class ScreenCapture extends JFrame {
             }
             screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
             screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
-            javax.swing.Timer timer = new javax.swing.Timer(1000 / 60, e -> {
+            /*javax.swing.Timer timer = new javax.swing.Timer(1000 / 60, e -> {
                 //System.out.println("@@@@@@@@@@@@@@");
                 repaint();
             });
-            timer.start();
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        try {
-                            img = toBufferedImage(imageBlockingQueue2.take());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }).start();
+            timer.start();*/
+
         }
 
         @Override
         protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            //if (prevImg != img) {
-
-                //스크린X : 스크린Y = 화면X : 화면 Y
-                //getWidth()*screenHeight/screenWidth = y;
-                //System.out.println(" " + getWidth() + " " + screenHeight);
-                int panelWidth = getWidth();
-                int height = panelWidth * screenHeight / screenWidth;
-                g.drawImage(img, 0, (getHeight() / 2) - (height / 2), panelWidth, height, this);
-                g.setFont(new Font("한컴 윤고딕 250", Font.BOLD, 15));
-                g.drawString(("FPS : " + String.format("%.2f",FPScount)), panelWidth / 2 - 10, 30);
-                prevImg = img;
-            //}
-            //g.drawOval(100,100,300,300);
-        }
-
-        public void run() {
-            Rectangle rect = new Rectangle(0, 0, screenWidth, screenHeight);
-            double avg = 0;
-            int count = 0;
-            while (true) {
-                try {
-
-                    long s = System.currentTimeMillis();
-                    //image = JNAScreenShot2.getScreenshot(rect);
-                    image = robot.createScreenCapture(rect);
-                    //image = getScaledImage(image, 1920, 1080);
-
-                    //9~11frame
-                    imageBlockingQueue2.put(toByteArray(image));
-                    avg += 1 / ((System.currentTimeMillis() - s) / (double) 1000);
-                    FPScount = avg / count++;
-                    //System.out.println(imageBlockingQueue2.size() + " " + avg / count++);
-                    //repaint();
+            //super.paintComponent(g);
+            g.clearRect(0, 0, getWidth(), getHeight());
+            //스크린X : 스크린Y = 화면X : 화면 Y
+            //getWidth()*screenHeight/screenWidth = y;
+            //System.out.println(" " + getWidth() + " " + screenHeight);
 
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            //g.drawRect(10,10,200,200);
+            try {
+                img = imageBlockingQueue2.take();
+                image = toBufferedImage(img);
+                panelWidth = getWidth();
+                height = panelWidth * screenHeight / screenWidth;
+                g.drawImage(image, 0, (getHeight() / 2) - (height / 2), panelWidth, height, this);
+                g.setFont(myFont);
+                g.drawString(FPSLabel, panelWidth / 2 - 10, 30);
+                FPScount++;
+                image = null;
+                img.clear();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
         }
+
     }
 
     public byte[] toByteArray(BufferedImage image) throws IOException {//ImageIO보다 빠름
+        //long l = System.currentTimeMillis();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(baos);
         encoder.encode(image);
+        //System.out.println((System.currentTimeMillis()-l)/(double)1000+"s");
+        return baos.toByteArray();
+    }
+
+    public byte[] toByteArray2(BufferedImage image) throws IOException {//ImageIO보다 빠름
+        //long l = System.currentTimeMillis();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", baos);
+        //System.out.println((System.currentTimeMillis()-l)/(double)1000+"s");
         return baos.toByteArray();
     }
 
@@ -170,6 +204,19 @@ public class ScreenCapture extends JFrame {
         ByteArrayInputStream bais = new ByteArrayInputStream(image);
         JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(bais);
 
+        return decoder.decodeAsBufferedImage();
+    }
+
+    public BufferedImage toBufferedImage(ByteBuffer image) throws IOException {//ImageIO보다 빠름
+
+        byte b[] = new byte[image.position()];
+        image.flip();
+        image.get(b);
+        /*for(int i=0; i<(b.length>100?100:b.length); i++)
+            System.out.print(b[i]);*/
+        ByteArrayInputStream bais = new ByteArrayInputStream(b);
+        JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(bais);
+        b = null;
         return decoder.decodeAsBufferedImage();
     }
 
@@ -182,7 +229,8 @@ public class ScreenCapture extends JFrame {
         return background;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AWTException {
+
         System.setProperty("sun.awt.noerasebackground", "true");
         new ScreenCapture();
     }
