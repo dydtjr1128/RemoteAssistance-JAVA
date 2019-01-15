@@ -39,10 +39,15 @@
     
   </ul>
 </p>
-
 <p>
   <img src="https://user-images.githubusercontent.com/19161231/48710631-5440c280-ec4c-11e8-9808-39203fa8d10b.png" width="50%">
 </p>
+
+## Notice
+- JAVA의 BufferedImage 메모리 제거 문제로 인하여 CPP로 재개발
+- https://github.com/dydtjr1128/RemoteControl-Cpp
+
+
 
 </br> 
 <a href="mailto:dydtjr1994@gmail.com" target="_blank">
