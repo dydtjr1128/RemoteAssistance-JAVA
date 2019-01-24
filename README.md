@@ -1,5 +1,5 @@
-# RemoteControl
-`RemoteControl` like TeamViewer(JAVA)
+# RemoteAssistance
+`RemoteAssistance` like TeamViewer(JAVA)
 
 키보드, 마우스 후킹(JNI)을 이용한 원격지원 프로그램
 
@@ -36,7 +36,6 @@
         <li>client - broker - host</li>
       </ul>
     </li>
-    
   </ul>
 </p>
 <p>
@@ -45,7 +44,7 @@
 
 ## Notice
 - JAVA의 BufferedImage 메모리 제거 문제로 인하여 C++로 재개발
-- https://github.com/dydtjr1128/RemoteControl-Cpp
+- https://github.com/dydtjr1128/RemoteAssistance-Cpp
 
 ## 후기
 이번 원격지원 프로그램을 만들어보면서 네트워크 적인 측면에서나 스크린 캡쳐부분이 굉장히 취약한 부분이 많았다는 것을 알 수 있었다.
