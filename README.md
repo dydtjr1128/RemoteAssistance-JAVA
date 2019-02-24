@@ -10,6 +10,8 @@ https://dydtjr1128.github.io/RemoteAssistance-JAVA/.
 
 ![default](https://user-images.githubusercontent.com/19161231/50884683-01ef7700-142f-11e9-8ba0-82c4dd2ed735.gif)
 
+![image](https://user-images.githubusercontent.com/19161231/53296021-9d577280-384a-11e9-84c3-656e3226017a.png)
+
 ## Simple Structure
 <p>
   <img src="https://user-images.githubusercontent.com/19161231/48710563-1fcd0680-ec4c-11e8-8620-7709af3418f6.png" width="50%">
