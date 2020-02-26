@@ -47,7 +47,7 @@ https://dydtjr1128.github.io/RemoteAssistance-JAVA/.
 </p>
 
 ## Notice
-- JAVA의 BufferedImage 메모리 제거 문제로 인하여 C++로 재개발
+- JAVA의 BufferedImage에 이미지 데이터를 담는데 GC의 처리속도보다 힙에 쌓이는 속도가 빨라 메모리 과다 점유 문제가 있어 C++로 재개발
 - https://github.com/dydtjr1128/RemoteAssistance-Cpp
 
 ## 후기
