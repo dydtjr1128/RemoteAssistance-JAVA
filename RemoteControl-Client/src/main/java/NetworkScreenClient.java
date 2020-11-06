@@ -9,10 +9,10 @@ import java.net.URL;
 public class NetworkScreenClient extends JFrame {
 	private ControlPanel controlPanel = new ControlPanel();
 	private String myFont = "맑은고딕";
-	private URL exitURL = getClass().getClassLoader().getResource("exit.png");	
-	private ImageIcon exitIcon = new ImageIcon(exitURL);
-	private URL minimizeURL = getClass().getClassLoader().getResource("minimize.png");	
-	private ImageIcon minimizeIcon = new ImageIcon(minimizeURL);
+	private URL exitURL;//= getClass().getClassLoader().getResource("exit.png");
+	private ImageIcon exitIcon;//= new ImageIcon(exitURL);
+	private URL minimizeURL;// = getClass().getClassLoader().getResource("minimize.png");
+	private ImageIcon minimizeIcon;// = new ImageIcon(minimizeURL);
 	private JMenuBar jbar;
 	private final int FRAME_WIDTH = 500;
 	private final int FRAME_HEIGHT = 110;
@@ -25,6 +25,14 @@ public class NetworkScreenClient extends JFrame {
 	private final static int SERVER_KEYBOARD_PORT = SERVER_PORT-2;
 	ScreenPanel screenPanel;
 	public NetworkScreenClient() {
+		exitURL = getClass().getClassLoader().getResource("exit.png");
+		minimizeURL = getClass().getClassLoader().getResource("minimize.png");
+
+
+		exitIcon = new ImageIcon(exitURL);
+		minimizeIcon = new ImageIcon(minimizeURL);
+
+
 		setTitle("원격지원-지원지");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);		
 		setLayout(null);

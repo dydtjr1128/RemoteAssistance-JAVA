@@ -25,7 +25,7 @@ public class NetworkScreenServer extends JFrame {
 	private DataOutputStream dataOutputStream;
 	private ObjectOutputStream objectOutputStream;
 	private Image cursor;
-	private String myFont = "�������";
+	private String myFont = "????";
 	private BufferedImage screenImage;
 	private Rectangle rect;
 	private MainPanel mainPanel = new MainPanel();
@@ -68,7 +68,7 @@ public class NetworkScreenServer extends JFrame {
 	private Vector<byte[]> imgvec = new Vector<>();
 
 	public NetworkScreenServer() {
-		setTitle("원격지원 대상 컴퓨터용");
+		setTitle("NetworkScreenServer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(null);
 		setContentPane(mainPanel);
@@ -104,9 +104,9 @@ public class NetworkScreenServer extends JFrame {
 					// t.getLocale().getDisplayCountry());
 					System.out.println("ee");
 					count = 1;
-					u32.keybd_event((byte) 0x15, (byte) 0, 0, 0);// ����ffDDDddSS
-					u32.keybd_event((byte) 0x15, (byte) 00, (byte) 0x0002, 0);// ����
-																				// ����
+					u32.keybd_event((byte) 0x15, (byte) 0, 0, 0);// ????ffDDDddSS
+					u32.keybd_event((byte) 0x15, (byte) 00, (byte) 0x0002, 0);// ????
+																				// ????
 				}
 			}
 		});
@@ -114,7 +114,7 @@ public class NetworkScreenServer extends JFrame {
 	}
 
 	public interface User32jna extends Library {
-		User32jna INSTANCE = (User32jna) Native.loadLibrary("user32.dll", User32jna.class);
+		User32jna INSTANCE = (User32jna) Native.load("user32.dll", User32jna.class);
 
 		// User32jna INSTANCE = (User32jna)
 		// Native.loadLibrary("user32.dll",User32jna.class);
@@ -238,7 +238,6 @@ public class NetworkScreenServer extends JFrame {
 				screenWidth = Toolkit.getDefaultToolkit().getScreenSize().width;
 				screenHeight = Toolkit.getDefaultToolkit().getScreenSize().height;
 				rect = new Rectangle(0, 0, screenWidth, screenHeight);
-				System.out.println("��������");
 				imageSeverSocket = new ServerSocket(SERVER_PORT);// ImageSERVER
 
 				imageSocket = imageSeverSocket.accept();
@@ -300,7 +299,7 @@ public class NetworkScreenServer extends JFrame {
 
 					if (isCompress) {
 
-						//byte[] compressImageByte = compress(imageByte);// 6MB->480KB����						
+						//byte[] compressImageByte = compress(imageByte);// 6MB->480KB????						
 						// System.out.println("compress : " +
 						// (double)compressImageByte.length/1024 + "kb");
 						dataOutputStream.writeInt(imageByte.length);
@@ -328,7 +327,6 @@ public class NetworkScreenServer extends JFrame {
 									imgvec.remove(0);
 									index++;								
 									if(index == 30){
-										System.out.println("������");
 										index=0;
 										System.gc();
 									}
@@ -366,7 +364,7 @@ public class NetworkScreenServer extends JFrame {
 				//System.out.println(imgvec.size());
 				if(imgvec.size()>5)
 					try {
-						System.out.println("wait");
+						//System.out.println("wait");
 						wait();
 					} catch (InterruptedException e) {
 						
@@ -415,13 +413,13 @@ public class NetworkScreenServer extends JFrame {
 					int keyboardState = dataInputStream.readInt();
 					if (keyboardState == KEY_PRESSED) {// KEYBOARD PRESSED
 						int keyCode = dataInputStream.readInt();
-						// System.out.println(keyCode + "����");
-						u32.keybd_event((byte) keyCode, (byte) 0, 0, 0);// ����ffDDDddSS
+						// System.out.println(keyCode + "????");
+						u32.keybd_event((byte) keyCode, (byte) 0, 0, 0);// ????ffDDDddSS
 						// robot.keyPress(keyCode);
 					} else if (keyboardState == KEY_RELEASED) {
 						int keyCode = dataInputStream.readInt();
-						// System.out.println(keyCode + "����");
-						u32.keybd_event((byte) keyCode, (byte) 00, (byte) 0x0002, 0);// ��
+						// System.out.println(keyCode + "????");
+						u32.keybd_event((byte) keyCode, (byte) 00, (byte) 0x0002, 0);// ??
 						// robot.keyRelease(keyCode);
 					}
 					yield();
@@ -435,10 +433,8 @@ public class NetworkScreenServer extends JFrame {
 	class CursorThread extends Thread {
 		public void run() {
 			try {
-				System.out.println("�ѱ�");
 				cursorServerSocket = new ServerSocket(SERVER_CURSOR_PORT);// cursorSERVER
 				cursorSocket = cursorServerSocket.accept();
-				System.out.println("Ŀ�� ���� ���Դ�");
 				DataInputStream dataInputStream = new DataInputStream(cursorSocket.getInputStream());
 				int mouseX = 0;
 				int mouseY = 0;
