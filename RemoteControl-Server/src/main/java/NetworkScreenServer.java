@@ -482,8 +482,4 @@ public class NetworkScreenServer extends JFrame {
 		}
 	}
 
-	public static void main(String[] args) {
-		new NetworkScreenServer();
-	}
-
 }
